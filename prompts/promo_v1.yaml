@@ -1,0 +1,46 @@
+# Real promo suite — Nike + Lipton campaigns, basic product motion.
+# Drop the two source images into assets/samples/images/ with the names below,
+# then: vgeval run --suite promo_v1
+version: promo_v1
+prompts:
+  - id: nike_basketball
+    category: apparel
+    source_image: assets/samples/images/nike_basketball.jpg
+    prompt: >-
+      Product-focused tracking shot left, perfectly linear and smooth. Camera
+      body slides sideways at a deliberately restrained commercial pace — total
+      lateral travel strictly limited to 5-7.5% of frame width over the full
+      clip. Zero camera rotation or tilt. Scene drifts imperceptibly right to
+      create a high-end, premium 3D lateral parallax that accentuates product
+      depth and contours. Static scene except for realistic, organic environment
+      elements. Brand packaging, product geometry, typography, logos, and label
+      text must remain 100% rigid, crisp, and un-warped. No texture swimming, no
+      geometric distortion, and no hallucinated shapes on the product surface.
+      Treat all text and branding as a fixed, high-resolution vector surface
+      texture. Environmental motion is minimal and organic: subtle wind rustle
+      in background foliage or micro-movements in liquids/condensation if
+      present. Minimal human interaction and no unexpected motion. Maintain exact
+      lighting, studio reflections, specular highlights, materials, and color
+      grading from the source image throughout the entire duration. Perfect
+      cinematic fidelity and premium look and feel.
+
+  - id: lipton_icetea
+    category: beverage
+    source_image: assets/samples/images/lipton_icetea.webp
+    prompt: >-
+      Product-focused tracking shot left, perfectly linear and smooth. Camera
+      body slides sideways at a deliberately restrained commercial pace — total
+      lateral travel strictly limited to 5-7.5% of frame width over the full
+      clip. Zero camera rotation or tilt. Scene drifts imperceptibly right to
+      create a high-end, premium 3D lateral parallax that accentuates product
+      depth and contours. Static scene except for realistic, organic environment
+      elements. Brand packaging, product geometry, typography, logos, and label
+      text must remain 100% rigid, crisp, and un-warped. No texture swimming, no
+      geometric distortion, and no hallucinated shapes on the product surface.
+      Treat all text and branding as a fixed, high-resolution vector surface
+      texture. Environmental motion is minimal and organic: subtle wind rustle
+      in background foliage or micro-movements in liquids/condensation if
+      present. Minimal human interaction and no unexpected motion. Maintain exact
+      lighting, studio reflections, specular highlights, materials, and color
+      grading from the source image throughout the entire duration. Perfect
+      cinematic fidelity and premium look and feel.

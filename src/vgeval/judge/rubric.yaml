@@ -1,0 +1,62 @@
+# Judge rubric — PLACEHOLDER definitions.
+#
+# The 9 dimension NAMES are fixed (they must match vgeval.schemas.RUBRIC_DIMS).
+# You provide the authoritative per-dimension DEFINITIONS and SCALE. Edit the
+# `description` / `low` / `high` text below to match your evaluation standard.
+#
+# Scoring convention: every dimension is scored so that the MAX is always best,
+# including the defect dimensions (e.g. a 5 on `flickering` means "no flicker").
+# Flip `higher_is_better` if you prefer defect dims scored as severity.
+
+version: rubric_v1
+
+scale:
+  min: 1
+  max: 5
+  higher_is_better: true
+
+dims:
+  - name: prompt_adherence
+    description: How faithfully the video realizes the action/scene described by the prompt.
+    low: Ignores or contradicts the prompt.
+    high: Fully and accurately realizes the prompt.
+
+  - name: object_deformation
+    description: Whether objects keep a coherent, stable shape across the clip.
+    low: Objects warp, melt, or distort unnaturally.
+    high: Objects retain coherent, stable geometry throughout.
+
+  - name: object_cutoff
+    description: Whether key subjects stay properly framed rather than being clipped.
+    low: Important subjects are cropped or cut off at frame edges.
+    high: Subjects remain well within frame throughout.
+
+  - name: flickering
+    description: Temporal stability of textures, lighting, and surfaces.
+    low: Heavy flicker / strobing / texture crawl.
+    high: Smooth, stable surfaces with no flicker.
+
+  - name: fast_camera_movement
+    description: Whether camera motion is controlled and appropriate (not jarringly fast).
+    low: Erratic or excessively fast camera motion.
+    high: Smooth, intentional camera motion.
+
+  - name: video_quality
+    description: Overall technical quality — sharpness, artifacts, compression.
+    low: Blurry, artifact-ridden, low fidelity.
+    high: Crisp, clean, high fidelity.
+
+  - name: defied_physics
+    description: Physical plausibility of motion, gravity, and interactions.
+    low: Motion clearly violates real-world physics.
+    high: Motion is physically plausible.
+
+  - name: temporal_object_creation
+    description: Whether objects spuriously appear/disappear/duplicate over time.
+    low: Objects pop in/out or duplicate across frames.
+    high: Object set is consistent over time.
+
+  - name: aesthetics
+    description: Overall visual appeal for advertising/promotional use.
+    low: Unappealing composition, color, or lighting.
+    high: Polished, on-brand, promo-ready look.

@@ -1,0 +1,19 @@
+# Example prompt suite — PLACEHOLDER so the harness runs out of the box.
+# Replace with your real advertising/promo suite. Each entry pairs a prompt with
+# a source image (relative to repo root) and a category.
+version: example_v1
+prompts:
+  - id: p001
+    prompt: "Slow 360° turntable of the product on a pedestal, soft studio lighting."
+    source_image: assets/samples/images/p001.png
+    category: product
+
+  - id: p002
+    prompt: "Gentle push-in on the product as warm sunlight sweeps across it."
+    source_image: assets/samples/images/p002.png
+    category: lifestyle
+
+  - id: p003
+    prompt: "The product rests as subtle particles drift upward behind it."
+    source_image: assets/samples/images/p003.png
+    category: hero
