@@ -98,3 +98,7 @@ uv run vgeval canary    # full mock pipeline end-to-end (what CI/cron run)
 
 BSD 3-Clause (see `LICENSE`). If you use or build on this work, please retain the
 copyright notice and credit the author — see [`NOTICE`](NOTICE).
+
+Author: Dimos Papadopoulos
+Role: Product leader / builder
+Version: 2.0 (Slack integration)
