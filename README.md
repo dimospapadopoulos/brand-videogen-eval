@@ -99,6 +99,18 @@ uv run vgeval canary    # full mock pipeline end-to-end (what CI/cron run)
 BSD 3-Clause (see `LICENSE`). If you use or build on this work, please retain the
 copyright notice and credit the author — see [`NOTICE`](NOTICE).
 
+**Connect:**
+- GitHub: [@dimospapadopoulos](https://github.com/dimospapadopoulos)
+- LinkedIn: [Dimos Papadopoulos](https://linkedin.com/in/dimosp)
+- Portfolio: [Other Projects](https://www.notion.so/Dimos-Papadopoulos-Product-Portfolio-ad6dd941f79c4d28bfc741db4ea6be95)
+
+## Related Projects
+
+- **[PRD Completeness Validator](https://github.com/dimospapadopoulos/prd-completeness-validator)** - Validates PRDs against quality standards (pairs with PRD Generator skill directly into your Projects - as you automate 60% of your time towards more strategic thinking)
+- **[Voice of Customer Synthesizer](https://github.com/dimospapadopoulos/voc-portfolio-clean)** - Analyzes 150k+ feedback entries annually (feeds insights into Slack for actionability)
+
+---
+
 Author: Dimos Papadopoulos
 Role: Product leader / builder
 Version: 2.0 (Slack integration)
