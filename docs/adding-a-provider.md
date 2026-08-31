@@ -3,6 +3,12 @@
 The whole point of the harness: shipping support for a new model is **one file**.
 The runner, judge, store, and dashboard never change.
 
+> **Just want to compare clips you already generated?** You don't need to write an
+> adapter at all — use the bring-your-own-clips `local` provider: drop each model's
+> clips into `assets/samples/videos/<model>/<prompt_id>.mp4` and each folder becomes
+> a provider automatically. See the README's *"Compare real model outputs"* section.
+> The steps below are for wiring a model's **generation API** end-to-end.
+
 ## 1. Write the adapter
 
 Create `src/vgeval/providers/<name>.py`:

@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 
 from vgeval.config import REPO_ROOT
-from vgeval.providers import available
+from vgeval.providers import available, register_local_providers
 from vgeval.runner import run_batch
 from vgeval.scoring import judge_run
 from vgeval.store import RunStore
@@ -22,7 +22,8 @@ console = Console()
 
 @app.command()
 def providers() -> None:
-    """List registered providers."""
+    """List registered providers (including bring-your-own-clip model folders)."""
+    register_local_providers()
     console.print("Registered providers: " + (", ".join(available()) or "(none)"))
 
 
@@ -35,6 +36,7 @@ def run(
     run_id: str | None = typer.Option(None, "--run-id", help="Resume an existing run."),
 ) -> None:
     """Generate videos for the provider × prompt matrix."""
+    register_local_providers()  # pick up any bring-your-own-clip model folders
     rid = asyncio.run(
         run_batch(provider, suite, concurrency=concurrency, run_id=run_id, rubric_version=rubric)
     )

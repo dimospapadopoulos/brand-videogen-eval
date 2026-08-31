@@ -183,6 +183,41 @@ cp .env.example .env    # set ANTHROPIC_API_KEY
 uv run vgeval judge     # scores the latest run with Opus 4.8
 ```
 
+## Compare real model outputs (bring-your-own clips)
+
+No per-vendor API integration needed to compare models. Generate clips in each
+model's UI (Sora, Veo, Runway, Kling, …) or your own pipeline, then drop them into
+**one folder per model** — the folder name becomes the provider, the filename is
+the prompt id:
+
+```
+assets/samples/videos/
+  sora/    nike_basketball.mp4   lipton_icetea.mp4
+  veo/     nike_basketball.mp4   lipton_icetea.mp4
+  runway/  nike_basketball.mp4   lipton_icetea.mp4
+```
+
+Then run and judge — **only the judge costs money; there is no generation cost**:
+
+```bash
+uv run vgeval providers                                  # sora, veo, runway now listed
+uv run vgeval run --suite promo_v1 \
+  --provider sora --provider veo --provider runway --rubric rubric_v2
+uv run vgeval judge                                      # Opus 4.8 scores every clip
+uv run vgeval dashboard                                  # Compare tab shows them side by side
+```
+
+## Cost & controls
+
+The judge makes **one Opus vision call per clip** (source image + sampled frames),
+so cost scales with *clips × frames* — not with the number of rubric dimensions
+(deterministic and `human_flag` dims make no API call). Levers:
+
+- `vgeval judge` is **idempotent** — re-runs don't re-charge scored clips (use `--force` to re-score).
+- Iterate cheaply on Sonnet, do the final pass on Opus: `VGEVAL_JUDGE_MODEL=claude-sonnet-5`.
+- Fewer frames = fewer image tokens: `VGEVAL_JUDGE_FRAMES=4`.
+- Use `--stub` (free) for any pipeline/dashboard change; spend only on the final judge pass.
+
 ## Add your own content
 
 * **Prompt suite** → drop a YAML in `prompts/` (see `prompts/promo_v1.yaml`).
