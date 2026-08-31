@@ -5,15 +5,16 @@
 Enterprise-wide generative evaluation is an unsolved gap. On one hand, there's brand teams requiring adherence to the bible (logos, fonts, typography, style, esthetic etc.), on the other creative and marketing agencies who are interested in both the experience but also the sheer volume of assets to meet campaign demands.
 And in the middle of it all? Performance. Creative that not only invokes emotion but also converts or generates awareness; the buzz that all brands chase.
 
-From research, I couldn't find any major good open standard tailored to enterprise marketing, so I wanted to design some rubric based on what I learned shipping creative for my original IP (The Cosmic Ones) at-scale (email+medium+pinterest+youtube+meta+book content) and at my current role.
-
-With inspiration from VBench and VBench++, I have redefined some of the rubrics to what a brand would absolutely care more about and enriched it with a few core rubrics.
+From research, I found VBench (and later VBench++) which is a great benchmark answering the question: 'Is this a good, faithful generation?'. It's very elaborate and covers many aspects required for on-point technical generations. 
 <img width="2000" height="590" alt="image" src="https://github.com/user-attachments/assets/9cb38b72-312d-452c-a3b1-51c0dfe87868" />
 
+However, I couldn't find any major good open standard tailored to enterprise marketing, so I wanted to design some rubric based on what I learned shipping creative for my original IP (The Cosmic Ones) at-scale (email+medium+pinterest+youtube+meta+book content) and at my current role.
 
-This project aims to automate evaluations using AI to score and judge different models' performance at the core of what a marketer or brand creative would most care about.
+I have redefined some of the rubrics to what a brand would absolutely care more about and enriched it with a few core rubrics. The core questions I want my model to evaluate on top are 'is this clip on-brand, campaign-usable, and safe to ship at scale without brand/legal risk?'.
 
-This working reference implementation proves out that an LLM-as-a-judge with computer vision capabilities can judge creative and score it, thus helping in the creative generation process.
+This project aims to automate evaluations using AI to score and judge different models' performance at the core of what a marketer or brand creative would most care about on top of the technical rubrics that VBench covers.
+
+This working reference implementation proves out that an LLM-as-a-judge with computer vision capabilities, ground truth alongside a deterministic model and a human flag (per different dimensions) can judge creative and score it, thus helping in the creative generation process.
 
 **The What**
 
