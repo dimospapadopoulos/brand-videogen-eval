@@ -55,6 +55,10 @@ def build_jobs(providers: list[str], suite: Suite) -> list[tuple[str, GenRequest
                 prompt=entry.prompt,
                 source_image=_resolve_image(entry.source_image),
                 params={},
+                expected_copy=entry.expected_copy,
+                locale=entry.locale,
+                brand_palette=entry.brand_palette,
+                logo_ref=_resolve_image(entry.logo_ref) if entry.logo_ref else None,
             )
             jobs.append((provider, req))
     return jobs

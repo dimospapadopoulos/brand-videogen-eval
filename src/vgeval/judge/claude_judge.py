@@ -12,7 +12,7 @@ import mimetypes
 from pathlib import Path
 
 from vgeval.config import get_settings
-from vgeval.judge.rubric import Rubric
+from vgeval.judge.rubric import Method, Rubric, RubricDim
 from vgeval.schemas import GenRequest, JudgeScore, VideoResult
 
 
@@ -42,11 +42,19 @@ class ClaudeJudge:
         import anthropic
 
         self.client = anthropic.Anthropic(api_key=key)
-        self._tool = rubric.tool_schema()
 
-    def score(self, req: GenRequest, result: VideoResult, frames: list[Path]) -> JudgeScore:
+    def score(
+        self,
+        req: GenRequest,
+        result: VideoResult,
+        frames: list[Path],
+        dims: list[RubricDim],
+    ) -> JudgeScore:
         content: list[dict] = [
             {"type": "text", "text": f"Generation prompt:\n{req.prompt}"},
+        ]
+        content.extend(_ground_truth_blocks(req, dims))
+        content += [
             {"type": "text", "text": "ORIGINAL source image:"},
             _image_block(req.source_image),
             {"type": "text", "text": f"Sampled video frames (in order, {len(frames)} frames):"},
@@ -56,25 +64,46 @@ class ClaudeJudge:
             {"type": "text", "text": "Call record_scores with an integer per dimension."}
         )
 
+        tool = self.rubric.tool_schema(dims)
         msg = self.client.messages.create(
             model=self.model,
             max_tokens=1024,
-            system=self.rubric.instruction(),
-            tools=[self._tool],
+            system=self.rubric.instruction(dims),
+            tools=[tool],
             tool_choice={"type": "tool", "name": "record_scores"},
             messages=[{"role": "user", "content": content}],
         )
 
         payload = _extract_tool_input(msg)
-        dims = {d.name: int(payload[d.name]) for d in self.rubric.dims}
+        scored = {d.name: int(payload[d.name]) for d in dims if d.name in payload}
+        needs_review = [d.name for d in dims if d.method is Method.human_flag]
         return JudgeScore(
             job_id=req.job_id,
             provider=result.provider,
             prompt_id=req.prompt_id,
-            dims=dims,
+            dims=scored,
+            methods={d.name: d.method.value for d in dims},
             rationale=str(payload.get("rationale", "")),
             flags=list(payload.get("flags", []) or []),
+            needs_review=needs_review,
+            transcribed_text=payload.get("transcribed_text"),
         )
+
+
+def _ground_truth_blocks(req: GenRequest, dims: list[RubricDim]) -> list[dict]:
+    """Inject ground-truth context when a dim requires it (e.g. expected copy)."""
+    needs = {r for d in dims for r in d.requires}
+    blocks: list[dict] = []
+    if "expected_copy" in needs and req.expected_copy:
+        blocks.append(
+            {"type": "text", "text": f"Expected on-product copy (verbatim): {req.expected_copy!r}"}
+        )
+    if "locale" in needs and req.locale:
+        blocks.append({"type": "text", "text": f"Target locale/language: {req.locale}"})
+    if "logo_ref" in needs and req.logo_ref:
+        blocks.append({"type": "text", "text": "Reference brand logo:"})
+        blocks.append(_image_block(req.logo_ref))
+    return blocks
 
 
 def _extract_tool_input(msg: object) -> dict:

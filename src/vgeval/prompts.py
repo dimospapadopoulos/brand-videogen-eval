@@ -29,6 +29,12 @@ class PromptEntry(BaseModel):
     source_image: str
     category: str = "uncategorized"
 
+    # Optional ground truth for the brand/creative rubric dimensions.
+    expected_copy: str | None = None
+    locale: str | None = None
+    brand_palette: list[str] = Field(default_factory=list)
+    logo_ref: str | None = None
+
 
 class Suite(BaseModel):
     version: str

@@ -16,7 +16,14 @@ import json
 from pathlib import Path
 
 from vgeval.config import get_settings
-from vgeval.schemas import GenRequest, JobState, JudgeScore, PairwiseVerdict, RunManifest
+from vgeval.schemas import (
+    ExternalScore,
+    GenRequest,
+    JobState,
+    JudgeScore,
+    PairwiseVerdict,
+    RunManifest,
+)
 
 
 class RunStore:
@@ -29,6 +36,8 @@ class RunStore:
         self.requests_path = self.dir / "requests.jsonl"
         self.results_path = self.dir / "results.jsonl"
         self.pairwise_path = self.dir / "pairwise.jsonl"
+        self.external_path = self.dir / "external.jsonl"
+        self.rubric_path = self.dir / "rubric.snapshot.yaml"
 
     # -- creation / discovery ------------------------------------------------ #
     @classmethod
@@ -76,6 +85,16 @@ class RunStore:
     def append_pairwise(self, verdict: PairwiseVerdict) -> None:
         _append_jsonl(self.pairwise_path, verdict.model_dump())
 
+    def append_external(self, score: ExternalScore) -> None:
+        _append_jsonl(self.external_path, score.model_dump())
+
+    def write_rubric_snapshot(self, text: str) -> None:
+        """Freeze the rubric used for scoring into the run (auditability)."""
+        self.rubric_path.write_text(text)
+
+    def read_rubric_snapshot(self) -> str | None:
+        return self.rubric_path.read_text() if self.rubric_path.exists() else None
+
     # -- reads --------------------------------------------------------------- #
     def read_job_states(self) -> dict[str, JobState]:
         """Latest JobState per job_id (last write wins), for resume."""
@@ -97,6 +116,9 @@ class RunStore:
 
     def read_pairwise(self) -> list[PairwiseVerdict]:
         return [PairwiseVerdict.model_validate(r) for r in _read_jsonl(self.pairwise_path)]
+
+    def read_external(self) -> list[ExternalScore]:
+        return [ExternalScore.model_validate(r) for r in _read_jsonl(self.external_path)]
 
 
 def _append_jsonl(path: Path, obj: dict) -> None:

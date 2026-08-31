@@ -22,8 +22,7 @@ import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
 
 from vgeval.config import get_settings  # noqa: E402
-from vgeval.report import leaderboard, per_dimension  # noqa: E402
-from vgeval.schemas import RUBRIC_DIMS  # noqa: E402
+from vgeval.report import leaderboard, per_dimension, run_dims  # noqa: E402
 from vgeval.store import RunStore  # noqa: E402
 
 st.set_page_config(page_title="vgeval", layout="wide")
@@ -119,16 +118,18 @@ with tab_compare:
 with tab_detail:
     st.header("Per-dimension means")
     rows = per_dimension(run_id)
-    if rows:
+    dims = run_dims(run_id)
+    value_dims = [d for d in dims if any(d in r for r in rows)]
+    if rows and value_dims:
         df = pd.DataFrame(rows).melt(
-            id_vars=["provider", "n"], value_vars=list(RUBRIC_DIMS),
+            id_vars=["provider", "n"], value_vars=value_dims,
             var_name="dimension", value_name="score",
-        )
+        ).dropna(subset=["score"])
         chart = (
             alt.Chart(df)
             .mark_bar()
             .encode(
-                x=alt.X("dimension:N", sort=list(RUBRIC_DIMS)),
+                x=alt.X("dimension:N", sort=value_dims),
                 y="score:Q",
                 color="provider:N",
                 xOffset="provider:N",

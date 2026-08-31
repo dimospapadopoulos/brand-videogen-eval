@@ -1,0 +1,142 @@
+# rubric_v2 — the brand & creative band for enterprise marketing-at-scale.
+#
+# Deliberately does NOT try to out-VBench VBench on pure technical quality (see
+# docs/vbench-integration.md — those dims can be ingested instead). The value is
+# in what a creative director / brand-governance / localization team cares about.
+#
+# Each dim declares a `method` that routes HOW it is scored (auditable):
+#   vlm_absolute | vlm_with_ground_truth | vlm_pairwise | deterministic | human_flag
+# See src/vgeval/judge/rubric.py for routing semantics.
+#
+# Scoring convention: max is always best (5 = no defect / fully on-brand).
+
+version: rubric_v2
+
+scale:
+  min: 1
+  max: 5
+  higher_is_better: true
+
+dims:
+  # --- technical fidelity (kept lean; VBench covers this band deeply) -------
+  - name: prompt_adherence
+    band: technical_fidelity
+    method: vlm_absolute
+    description: How faithfully the motion realizes the prompt's described camera/scene.
+    low: Ignores or contradicts the prompt.
+    high: Fully and accurately realizes the prompt.
+
+  - name: object_deformation
+    band: technical_fidelity
+    method: vlm_absolute
+    description: Whether the product keeps coherent, stable geometry across the clip.
+    low: Product warps, melts, or distorts.
+    high: Product geometry stays rigid and coherent.
+
+  - name: flickering
+    band: technical_fidelity
+    method: vlm_absolute
+    description: "Temporal stability of textures/lighting (note: under-observed by sparse frames)."
+    low: Heavy flicker / texture crawl.
+    high: Smooth, stable surfaces.
+
+  - name: defied_physics
+    band: technical_fidelity
+    method: vlm_absolute
+    description: Physical plausibility of motion, gravity, and interactions.
+    low: Motion clearly violates physics.
+    high: Motion is physically plausible.
+
+  # --- brand fidelity (the core differentiator) -----------------------------
+  - name: logo_integrity
+    band: brand_fidelity
+    method: vlm_absolute
+    requires: [logo_ref]
+    description: Logo stays correct — not warped, recolored, duplicated, or hallucinated.
+    low: Logo corrupted, wrong, or invented.
+    high: Logo crisp, correct, and stable.
+
+  - name: typography_legibility
+    band: brand_fidelity
+    method: vlm_absolute
+    description: On-product/nearby text stays sharp, real, and legible (no "AI text soup").
+    low: Text is garbled, melted, or gibberish.
+    high: Text is crisp and fully legible.
+
+  - name: copy_language_adherence
+    band: brand_fidelity
+    method: vlm_with_ground_truth
+    requires: [expected_copy, locale]
+    description: >-
+      Rendered copy matches the expected words and target language; no wrong
+      language, misspellings, or invented copy. (If no expected copy is given,
+      scores the ABSENCE of hallucinated/garbled text.)
+    low: Wrong/invented words or wrong language.
+    high: Copy matches expected string and locale exactly.
+
+  - name: brand_color_adherence
+    band: brand_fidelity
+    method: deterministic
+    requires: [brand_palette]
+    description: Dominant colors stay within the brand palette (CIE ΔE vs brand hexes).
+    low: Colors drift far off palette.
+    high: Colors match the brand palette.
+
+  - name: design_system_adherence
+    band: brand_fidelity
+    method: human_flag
+    description: Holistic on-brand feel — layout, spacing, tone vs brand guidelines.
+    low: Off-brand look and feel.
+    high: Cleanly on-brand.
+
+  # --- product truth / risk -------------------------------------------------
+  - name: sku_fidelity
+    band: product_truth
+    method: vlm_absolute
+    description: Animated product matches the exact source SKU/variant — no invented variants.
+    low: Product differs from the source variant.
+    high: Product matches the source SKU exactly.
+
+  - name: unauthorized_claims_or_marks
+    band: product_truth
+    method: human_flag
+    description: No hallucinated claims (e.g. "SUGAR FREE"), competitor logos, or prohibited imagery.
+    low: Introduces unauthorized claims/marks.
+    high: No unauthorized claims or marks.
+
+  # --- creative craft / usability -------------------------------------------
+  - name: hero_focal_clarity
+    band: creative_craft
+    method: vlm_absolute
+    description: Product is the unmistakable hero, not upstaged by background motion.
+    low: Product is lost or upstaged.
+    high: Product is the clear focal hero.
+
+  - name: crop_safety_multiformat
+    band: creative_craft
+    method: vlm_absolute
+    description: Product stays within safe zones so the clip reframes to 9:16 / 1:1 / 16:9.
+    low: Product clipped when reframed.
+    high: Product safe across aspect ratios.
+
+  - name: motion_tastefulness
+    band: creative_craft
+    method: vlm_pairwise
+    description: Motion reads premium/restrained vs cheap/gimmicky; matches brand tone.
+    low: Cheap, gimmicky, or jarring motion.
+    high: Premium, restrained, brand-appropriate motion.
+
+  - name: loopability
+    band: creative_craft
+    method: deterministic
+    description: Clean loop — first and last frames are close enough for seamless looping.
+    low: Abrupt jump between first and last frame.
+    high: First/last frames match for a clean loop.
+
+  # --- localization / market ------------------------------------------------
+  - name: market_cultural_fit
+    band: localization
+    method: human_flag
+    description: Gestures, symbols, and setting are appropriate for the target market.
+    low: Culturally inappropriate or risky.
+    high: Appropriate for the target market.

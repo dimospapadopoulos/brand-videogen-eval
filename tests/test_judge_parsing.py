@@ -46,7 +46,6 @@ def test_claude_judge_parses_tool_output(monkeypatch, sample_image, tmp_path):
     judge.rubric = rubric
     judge.model = "claude-opus-4-8"
     judge.client = _FakeClient(payload)
-    judge._tool = rubric.tool_schema()
 
     frame = tmp_path / "frame_00.png"
     frame.write_bytes(sample_image.read_bytes())
@@ -54,9 +53,11 @@ def test_claude_judge_parses_tool_output(monkeypatch, sample_image, tmp_path):
     req = GenRequest(job_id="mock__p1", prompt_id="p1", prompt="x", source_image=str(sample_image))
     result = VideoResult(provider="mock", job_id="mock__p1", video_path="v.mp4", seconds=1, fps=8)
 
-    score = judge.score(req, result, [Path(frame)])
+    score = judge.score(req, result, [Path(frame)], rubric.vlm_dims())
     assert set(score.dims) == set(RUBRIC_DIMS)
     assert all(v == 4 for v in score.dims.values())
     assert score.flags == ["minor flicker"]
+    # Method provenance is recorded for each dim.
+    assert set(score.methods) == set(RUBRIC_DIMS)
     # Forced tool use was requested.
     assert judge.client.messages.captured["tool_choice"]["name"] == "record_scores"

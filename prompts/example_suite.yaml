@@ -7,13 +7,16 @@ prompts:
     prompt: "Slow 360° turntable of the product on a pedestal, soft studio lighting."
     source_image: assets/samples/images/p001.png
     category: product
+    brand_palette: ["#1E3A8A", "#F59E0B"]
 
   - id: p002
     prompt: "Gentle push-in on the product as warm sunlight sweeps across it."
     source_image: assets/samples/images/p002.png
     category: lifestyle
+    brand_palette: ["#1E3A8A", "#F59E0B"]
 
   - id: p003
     prompt: "The product rests as subtle particles drift upward behind it."
     source_image: assets/samples/images/p003.png
     category: hero
+    brand_palette: ["#1E3A8A", "#F59E0B"]
