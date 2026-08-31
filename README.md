@@ -219,8 +219,9 @@ copyright notice and credit the author — see `NOTICE`.
 * LinkedIn: [Dimos Papadopoulos](https://linkedin.com/in/dimosp)
 * Portfolio: [Other Projects](https://www.notion.so/Dimos-Papadopoulos-Product-Portfolio-ad6dd941f79c4d28bfc741db4ea6be95)
 
-## Related Projects
+## Other Projects
 
+* [Multi-agent PRD Checker](https://github.com/dimospapadopoulos/multi-agent-prd-reviewer) — AI-powered system that uses four specialised agents to review Product Requirement Documents, combining rule-based validation with AI-driven technical, UX, and legal critique. 
 * [PRD Completeness Validator](https://github.com/dimospapadopoulos/prd-completeness-validator) — Validates PRDs against quality standards (pairs with the PRD Generator skill directly into your Projects — automating ~60% of the busywork toward more strategic thinking)
 * [Voice of Customer Synthesizer](https://github.com/dimospapadopoulos/voc-portfolio-clean) — Analyzes 150k+ feedback entries annually (feeds insights into Slack for actionability)
 
