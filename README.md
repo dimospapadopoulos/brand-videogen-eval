@@ -8,6 +8,8 @@ And in the middle of it all? Performance. Creative that not only invokes emotion
 From research, I couldn't find any major good open standard tailored to enterprise marketing, so I wanted to design some rubric based on what I learned shipping creative for my original IP (The Cosmic Ones) at-scale (email+medium+pinterest+youtube+meta+book content) and at my current role.
 
 With inspiration from VBench and VBench++, I have redefined some of the rubrics to what a brand would absolutely care more about and enriched it with a few core rubrics.
+<img width="2000" height="590" alt="image" src="https://github.com/user-attachments/assets/9cb38b72-312d-452c-a3b1-51c0dfe87868" />
+
 
 This project aims to automate evaluations using AI to score and judge different models' performance at the core of what a marketer or brand creative would most care about.
 
