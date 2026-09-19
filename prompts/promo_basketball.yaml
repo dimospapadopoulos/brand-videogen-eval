@@ -1,0 +1,21 @@
+# Basketball-only suite (single prompt) — for comparing models when only the
+# nike_basketball clips are available. Same prompt + ground truth as promo_v1.
+version: promo_basketball_v1
+prompts:
+  - id: nike_basketball
+    category: apparel
+    source_image: assets/samples/images/nike_basketball.jpg
+    locale: en-US
+    brand_palette: ["#000000", "#111111", "#3A3A3A", "#FFFFFF"]
+    prompt: >-
+      Cinematic slow-motion sports film from this still. Subtle, controlled
+      motion only: the athlete holds the pose with micro-movements — a slow
+      breath, faint muscle tension, the basketball rotating a few degrees
+      in-hand. Camera does one slow, smooth dolly push-in (total move under 8%
+      of frame width), zero rotation or tilt, keeping the athlete the clear
+      hero. Preserve exact anatomy, apparel fit, and the logo/swoosh as rigid,
+      crisp, undistorted surfaces — no warping, morphing, extra limbs, or
+      hallucinated text. Keep the original dramatic side lighting, shadows,
+      court reflections, color grade, and contrast throughout. Atmosphere only:
+      faint dust motes and soft light haze in the backlight. No new objects, no
+      crowd, no camera shake. Photoreal, high-end brand-commercial look.
