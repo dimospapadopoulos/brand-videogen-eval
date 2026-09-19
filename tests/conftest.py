@@ -13,6 +13,8 @@ def isolated_env(tmp_path, monkeypatch):
     monkeypatch.setenv("VGEVAL_CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setenv("VGEVAL_JUDGE_FRAMES", "4")
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    # Run from a scratch dir so a developer's real ./.env can't leak into tests.
+    monkeypatch.chdir(tmp_path)
     # Clear cached settings singletons if any imported module memoized them.
     yield
 

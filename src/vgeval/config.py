@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Repo root = three levels up from this file (src/vgeval/config.py).
@@ -19,9 +20,14 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Secrets. anthropic_api_key has no prefix so it matches the conventional
-    # ANTHROPIC_API_KEY env var.
-    anthropic_api_key: str = ""
+    # Secret. Read as the conventional ANTHROPIC_API_KEY (no VGEVAL_ prefix) from
+    # both the environment AND the .env file. The explicit validation_alias is
+    # what makes pydantic-settings bypass env_prefix for this one field, so a
+    # plain `ANTHROPIC_API_KEY=...` line in .env is picked up.
+    anthropic_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices("ANTHROPIC_API_KEY", "VGEVAL_ANTHROPIC_API_KEY"),
+    )
 
     judge_model: str = "claude-opus-4-8"
     concurrency: int = 8
@@ -32,13 +38,6 @@ class Settings(BaseSettings):
     assets_dir: Path = REPO_ROOT / "assets" / "samples"
     prompts_dir: Path = REPO_ROOT / "prompts"
     cache_dir: Path = REPO_ROOT / ".cache" / "videos"
-
-    def model_post_init(self, __context: object) -> None:
-        # Allow ANTHROPIC_API_KEY (no VGEVAL_ prefix) to populate the key.
-        import os
-
-        if not self.anthropic_api_key:
-            self.anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY", "")
 
 
 def get_settings() -> Settings:
