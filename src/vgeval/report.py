@@ -90,8 +90,11 @@ def leaderboard(run_id: str) -> list[dict]:
     per provider — so one catastrophic clip pulls the model down instead of being
     diluted by good dimensions. `gated` flags providers with any capped clip.
     """
+    from vgeval.config import get_settings
+
     smin, _ = _scale(run_id)
-    gate_threshold = smin + 1  # e.g. 1..5 scale -> gate at <= 2
+    configured = get_settings().gate_threshold
+    gate_threshold = configured if configured is not None else smin + 1
     results = RunStore.open(run_id).read_results()
     rows = per_dimension(run_id)
 

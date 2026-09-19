@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     concurrency: int = 8
     judge_frames: int = 6
 
+    # Defect gate: a defect-gate dim scoring at/below this caps the clip's overall.
+    # None -> default of scale.min + 1 (e.g. <=2 on a 1..5 scale). Raise to 3 for a
+    # stricter integrity bar; set to 0 to effectively disable gating.
+    gate_threshold: int | None = None
+
     # Paths (relative to repo root unless absolute).
     runs_dir: Path = REPO_ROOT / "runs"
     assets_dir: Path = REPO_ROOT / "assets" / "samples"
