@@ -88,6 +88,10 @@ with tab_gallery:
                         pd.DataFrame([sc.dims]).T.rename(columns={0: "score"}),
                         use_container_width=True,
                     )
+                    if sc.defects:
+                        st.error("⚠️ Defects found:\n" + "\n".join(f"- {d}" for d in sc.defects))
+                    if sc.needs_review:
+                        st.caption("Needs human review: " + ", ".join(sc.needs_review))
 
 with tab_compare:
     st.header("Compare providers")
@@ -114,6 +118,8 @@ with tab_compare:
                     )
                     if sc.rationale:
                         st.caption(sc.rationale)
+                    if sc.defects:
+                        st.error("⚠️ " + " · ".join(sc.defects))
 
 with tab_detail:
     st.header("Per-dimension means")

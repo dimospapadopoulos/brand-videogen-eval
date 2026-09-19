@@ -14,6 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from vgeval.judge.base import Judge, StubJudge
+from vgeval.judge.defects import ClaudeDefectHunter, StubDefectHunter, apply_defects
 from vgeval.judge.rubric import Rubric, resolve_rubric
 from vgeval.judge.scorers import ScoreContext, run_deterministic
 from vgeval.schemas import JobStatus, JudgeScore, VideoResult
@@ -26,6 +27,10 @@ def _build_judge(rubric: Rubric, use_stub: bool) -> Judge:
     from vgeval.judge.claude_judge import ClaudeJudge
 
     return ClaudeJudge(rubric)
+
+
+def _build_defect_hunter(rubric: Rubric, use_stub: bool):
+    return StubDefectHunter(rubric) if use_stub else ClaudeDefectHunter(rubric)
 
 
 def _score_deterministic(
@@ -53,6 +58,7 @@ def judge_run(
     use_stub: bool = False,
     force: bool = False,
     rubric_name: str | None = None,
+    hunt_defects: bool = True,
 ) -> list[JudgeScore]:
     """Score every `done` job in the run. Idempotent unless `force`."""
     store = RunStore.open(run_id)
@@ -66,6 +72,7 @@ def judge_run(
         store.results_path.unlink()  # fresh re-score, don't append to stale results
     already = {s.job_id for s in store.read_results()} if not force else set()
     judge = _build_judge(rubric, use_stub)
+    hunter = _build_defect_hunter(rubric, use_stub) if hunt_defects else None
     vlm_dims = rubric.vlm_dims()
 
     scored: list[JudgeScore] = []
@@ -109,6 +116,12 @@ def judge_run(
             needs_review=[d.name for d in rubric.human_dims()],
             transcribed_text=vlm_score.transcribed_text,
         )
+
+        # 4. dedicated defect-hunt pass — conservatively lowers defect dims and
+        # records findings (this is what catches hallucinations the main pass misses).
+        if hunter is not None:
+            apply_defects(merged, hunter.hunt(req, result, frames), rubric)
+
         store.append_result(merged)
         scored.append(merged)
     return scored

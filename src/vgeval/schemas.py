@@ -28,6 +28,17 @@ RUBRIC_DIMS: tuple[str, ...] = (
 )
 
 
+# Physical-integrity dimensions. A severe score here is a "dealbreaker" that the
+# defect-hunt pass can drive down and that the leaderboard gate caps the overall
+# on — so a catastrophic hallucination can't be averaged away.
+DEFECT_GATE_DIMS: tuple[str, ...] = (
+    "object_deformation",
+    "object_cutoff",
+    "defied_physics",
+    "temporal_object_creation",
+)
+
+
 class JobStatus(StrEnum):
     pending = "pending"
     running = "running"
@@ -101,6 +112,16 @@ class JudgeScore(BaseModel):
     skipped: list[str] = Field(default_factory=list)
     needs_review: list[str] = Field(default_factory=list)
     transcribed_text: str | None = None
+    # Human-readable defect findings from the dedicated defect-hunt pass.
+    defects: list[str] = Field(default_factory=list)
+
+
+class Defect(BaseModel):
+    """A single defect found by the defect-hunt pass."""
+
+    description: str
+    dim: str  # which rubric dim it impacts (a defect-oriented dim)
+    severity: str  # minor | major | severe
 
 
 class ExternalScore(BaseModel):

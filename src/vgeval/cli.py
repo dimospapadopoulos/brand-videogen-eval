@@ -54,14 +54,19 @@ def judge(
     stub: bool = typer.Option(False, "--stub", help="Use the keyless deterministic judge."),
     force: bool = typer.Option(False, "--force", help="Re-score already-scored jobs."),
     rubric: str | None = typer.Option(None, "--rubric", "-r", help="Override rubric."),
+    defects: bool = typer.Option(
+        True, "--defects/--no-defects", help="Run the dedicated defect-hunt pass (extra call/clip)."
+    ),
 ) -> None:
-    """Score a run with the hybrid judge (VLM + deterministic), or the stub."""
+    """Score a run with the hybrid judge (VLM + deterministic + defect hunt), or the stub."""
     rid = run_id or RunStore.latest_run_id()
     if not rid:
         console.print("[red]No runs found.[/] Run `vgeval run` first.")
         raise typer.Exit(1)
     try:
-        scored = judge_run(rid, use_stub=stub, force=force, rubric_name=rubric)
+        scored = judge_run(
+            rid, use_stub=stub, force=force, rubric_name=rubric, hunt_defects=defects
+        )
     except RuntimeError as exc:
         console.print(f"[yellow]Skipping real judge:[/] {exc}")
         console.print("Tip: pass --stub for a keyless run.")

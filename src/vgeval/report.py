@@ -11,7 +11,34 @@ from statistics import mean
 
 import yaml
 
+from vgeval.schemas import DEFECT_GATE_DIMS
 from vgeval.store import RunStore
+
+
+def _scale(run_id: str) -> tuple[int, int]:
+    """(min, max) from the run's rubric snapshot; defaults to (1, 5)."""
+    snap = RunStore.open(run_id).read_rubric_snapshot()
+    if snap:
+        s = (yaml.safe_load(snap) or {}).get("scale", {})
+        return int(s.get("min", 1)), int(s.get("max", 5))
+    return 1, 5
+
+
+def clip_overall(dims: dict[str, int], gate_threshold: int) -> tuple[float, bool]:
+    """Per-clip overall with the integrity gate.
+
+    Normally the mean across scored dims — but if any defect-gate dim scores at or
+    below `gate_threshold`, the overall is capped at that worst defect score, so a
+    catastrophic hallucination can't be averaged away. Returns (overall, gated).
+    """
+    if not dims:
+        return 0.0, False
+    base = mean(dims.values())
+    defect_scores = [dims[d] for d in DEFECT_GATE_DIMS if d in dims]
+    worst = min(defect_scores) if defect_scores else None
+    if worst is not None and worst <= gate_threshold:
+        return round(min(base, float(worst)), 3), True
+    return round(base, 3), False
 
 
 def run_dims(run_id: str) -> list[str]:
@@ -57,12 +84,30 @@ def per_dimension(run_id: str) -> list[dict]:
 
 
 def leaderboard(run_id: str) -> list[dict]:
-    """Providers ranked by overall mean (mean across that provider's scored dims)."""
-    dims = run_dims(run_id)
+    """Providers ranked by mean per-clip gated overall.
+
+    Each clip's overall is gated (a severe integrity defect caps it), then averaged
+    per provider — so one catastrophic clip pulls the model down instead of being
+    diluted by good dimensions. `gated` flags providers with any capped clip.
+    """
+    smin, _ = _scale(run_id)
+    gate_threshold = smin + 1  # e.g. 1..5 scale -> gate at <= 2
+    results = RunStore.open(run_id).read_results()
     rows = per_dimension(run_id)
+
+    per_provider: dict[str, list] = {}
+    for s in results:
+        per_provider.setdefault(s.provider, []).append(s)
+
     for row in rows:
-        present = [row[d] for d in dims if d in row]
-        row["overall"] = round(mean(present), 3) if present else 0.0
+        items = per_provider.get(row["provider"], [])
+        overalls, gated_any = [], False
+        for s in items:
+            o, g = clip_overall(s.dims, gate_threshold)
+            overalls.append(o)
+            gated_any = gated_any or g
+        row["overall"] = round(mean(overalls), 3) if overalls else 0.0
+        row["gated"] = gated_any
     return sorted(rows, key=lambda r: r["overall"], reverse=True)
 
 
