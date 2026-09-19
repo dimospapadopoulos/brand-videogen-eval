@@ -10,22 +10,17 @@ prompts:
     # Nike apparel shot: near-monochrome black/greys, no on-product copy.
     brand_palette: ["#000000", "#111111", "#3A3A3A", "#FFFFFF"]
     prompt: >-
-      Product-focused tracking shot left, perfectly linear and smooth. Camera
-      body slides sideways at a deliberately restrained commercial pace — total
-      lateral travel strictly limited to 5-7.5% of frame width over the full
-      clip. Zero camera rotation or tilt. Scene drifts imperceptibly right to
-      create a high-end, premium 3D lateral parallax that accentuates product
-      depth and contours. Static scene except for realistic, organic environment
-      elements. Brand packaging, product geometry, typography, logos, and label
-      text must remain 100% rigid, crisp, and un-warped. No texture swimming, no
-      geometric distortion, and no hallucinated shapes on the product surface.
-      Treat all text and branding as a fixed, high-resolution vector surface
-      texture. Environmental motion is minimal and organic: subtle wind rustle
-      in background foliage or micro-movements in liquids/condensation if
-      present. Minimal human interaction and no unexpected motion. Maintain exact
-      lighting, studio reflections, specular highlights, materials, and color
-      grading from the source image throughout the entire duration. Perfect
-      cinematic fidelity and premium look and feel.
+      Cinematic slow-motion sports film from this still. Subtle, controlled
+      motion only: the athlete holds the pose with micro-movements — a slow
+      breath, faint muscle tension, the basketball rotating a few degrees
+      in-hand. Camera does one slow, smooth dolly push-in (total move under 8%
+      of frame width), zero rotation or tilt, keeping the athlete the clear
+      hero. Preserve exact anatomy, apparel fit, and the logo/swoosh as rigid,
+      crisp, undistorted surfaces — no warping, morphing, extra limbs, or
+      hallucinated text. Keep the original dramatic side lighting, shadows,
+      court reflections, color grade, and contrast throughout. Atmosphere only:
+      faint dust motes and soft light haze in the backlight. No new objects, no
+      crowd, no camera shake. Photoreal, high-end brand-commercial look.
 
   - id: lipton_icetea
     category: beverage
@@ -35,19 +30,15 @@ prompts:
     # Lipton cans: yellow / red / green brand colors on a dark set.
     brand_palette: ["#F6C000", "#E4002B", "#00A651", "#005EB8", "#111111"]
     prompt: >-
-      Product-focused tracking shot left, perfectly linear and smooth. Camera
-      body slides sideways at a deliberately restrained commercial pace — total
-      lateral travel strictly limited to 5-7.5% of frame width over the full
-      clip. Zero camera rotation or tilt. Scene drifts imperceptibly right to
-      create a high-end, premium 3D lateral parallax that accentuates product
-      depth and contours. Static scene except for realistic, organic environment
-      elements. Brand packaging, product geometry, typography, logos, and label
-      text must remain 100% rigid, crisp, and un-warped. No texture swimming, no
-      geometric distortion, and no hallucinated shapes on the product surface.
-      Treat all text and branding as a fixed, high-resolution vector surface
-      texture. Environmental motion is minimal and organic: subtle wind rustle
-      in background foliage or micro-movements in liquids/condensation if
-      present. Minimal human interaction and no unexpected motion. Maintain exact
-      lighting, studio reflections, specular highlights, materials, and color
-      grading from the source image throughout the entire duration. Perfect
-      cinematic fidelity and premium look and feel.
+      Cinematic premium beverage commercial from this still. Restrained motion
+      only: fine condensation glistens and a few droplets bead slowly down the
+      cans, subtle sparkle on the ice, a faint cool vapor drifting. Camera does
+      one slow, perfectly linear lateral track (total travel 5-8% of frame
+      width), zero rotation or tilt, creating gentle 3D parallax that
+      accentuates the cans' depth. Keep every can's geometry, the logo,
+      typography, and label text 100% rigid, crisp, and legible — treat all
+      branding as a fixed high-resolution vector surface: no warping, texture
+      swimming, misspelling, or invented copy. Preserve the exact studio
+      lighting, specular highlights, reflections, colors, and dark background
+      from the source image throughout. No hands, no new objects, no camera
+      shake. Photoreal, high-end, appetizing premium look.
